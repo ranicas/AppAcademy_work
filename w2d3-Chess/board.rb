@@ -27,7 +27,7 @@ class Board
   end
 
   def move(start_pos, end_pos, color)
-    puts "start: #{start_pos}, #{self[start_pos]}"
+    
     raise MoveError.new("Cannot move an empty space!") if self[start_pos].nil?
     raise MoveError.new("Not your color!") unless self[start_pos].color == color
     raise MoveError.new("Must choose a space with a piece in it!") if empty_space?(start_pos)
@@ -99,34 +99,25 @@ class Board
   end
 
   def start_pieces
-    place_piece(Rook, :red, [0, 0])
-    place_piece(Rook, :red, [0, 7])
-    place_piece(Rook, :blue, [7, 0])
-    place_piece(Rook, :blue, [7, 7])
-
-    place_piece(Bishop, :red, [0, 2])
-    place_piece(Bishop, :red, [0, 5])
-    place_piece(Bishop, :blue, [7, 2])
-    place_piece(Bishop, :blue, [7, 5])
-
-    place_piece(Knight, :red, [0, 1])
-    place_piece(Knight, :red, [0, 6])
-    place_piece(Knight, :blue, [7, 1])
-    place_piece(Knight, :blue, [7, 6])
-
-    place_piece(Queen, :red, [0, 3])
-    place_piece(King, :red, [0, 4])
-    place_piece(Queen, :blue, [7, 3])
-    place_piece(King, :blue, [7, 4])
-
-    8.times do |i|
-      place_piece(Pawn, :red, [1, i])
+    [:red, :blue].each do |color|
+      fill_back_row(color)
+      fill_pawns_row(color)
     end
-
-    8.times do |i|
-      place_piece(Pawn, :blue, [6, i])
+  end
+  
+  def fill_back_row(color)
+    back_pieces = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
+    i = (color == :blue) ? 7 : 0
+    back_pieces.each_with_index do |piece_class, j|
+      place_piece(piece_class, color, [i, j])
     end
-
+  end
+  
+  def fill_pawns_row(color)
+    i = (color == :blue) ? 6 : 1
+    8.times do |j|
+      place_piece(Pawn, color, [i, j])
+    end
   end
 
   def team(color)
