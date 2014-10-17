@@ -1,9 +1,12 @@
+
+
+class InvalidMoveError < StandardError ;end
 class Piece
-  COLOR = [:blue, :red]
+  COLOR = [:white, :black]
   DOWN = [[1, -1], [1, 1]]
   UP =  [[-1, -1], [-1, 1]]
   
-  attr_reader :color, :pos
+  attr_reader :color, :pos, :is_king
   
   def initialize(color, pos, board, is_king = false)
     @color = color
@@ -39,15 +42,38 @@ class Piece
     true
   end
   
+  def perform_moves(seq)
+    unless (valid_move_seq?(seq) && perform_moves!(seq))
+      raise InvalidMoveError.new("Move sequence not allowed!")
+    end
+  end
   
-  private
+  #private
+  
+  def perform_moves!(move_sequence)
+    # jumped = perform_jump(move_sequence[0])
+    
+    if move_sequence.count == 1
+      perform_jump(move_sequence[0]) || perform_slide(move_sequence[0])
+    else
+      move_sequence.count.times do |i|
+        return false unless perform_jump(move_sequence[i])
+      end
+      true
+    end
+  end
+  
+  def valid_move_seq?(seq)
+    dup_board = @board.dup
+    dup_board[pos].perform_moves!(seq)
+  end
   
   def mark
-    if color == :blue && @is_king
+    if color == :white && @is_king
       "⬜"
-    elsif color == :blue && !@is_king
+    elsif color == :white && !@is_king
       "\u26AA"
-    elsif color == :red && @is_king
+    elsif color == :black && @is_king
       "⬛"
     else
       "\u26AB"
@@ -57,6 +83,19 @@ class Piece
   def jump_dir(new_pos)
     delta = [new_pos[0] - pos[0], new_pos[1] - pos[1]]
     move_dir.select {|dir| [dir[0] * 2, dir[1] * 2] == delta}
+  end
+  
+  def jump_allowed
+    jumps = []
+    
+    move_dir.each do |dir|
+      enemy_pos = move_by(dir)
+      jump_pos = move_by([dir[0] * 2, dir[1] * 2]) 
+      jumps << jump_pos if @board.empty_pos?(jump_pos) && 
+        !@board[enemy_pos].nil? && @board[enemy_pos].color != color    
+    end
+    
+    jumps
   end
   
   def slide_allowed
@@ -83,12 +122,12 @@ class Piece
   def move_dir
     return DOWN + UP if @is_king
    
-    color == :blue ? DOWN : UP
+    color == :white ? DOWN : UP
   end
   
   def maybe_promote
-    if (color == :blue && pos[0] == 7) ||
-      (color == :red && pos[0] == 0)
+    if (color == :white && pos[0] == 7) ||
+      (color == :black && pos[0] == 0)
       @is_king = true
     end     
   end

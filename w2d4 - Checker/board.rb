@@ -1,4 +1,5 @@
 class Board
+  COLOR = [:white, :black]
   attr_accessor :grid
   def initialize(start = true)
     @grid = Array.new(8) {Array.new(8)}
@@ -14,8 +15,20 @@ class Board
   end
   
   def empty_pos?(pos)
-    (0..7).cover?(pos[0]) && (0..7).cover?(pos[1]) &&
-      self[pos].nil?
+    in_bound?(pos) && self[pos].nil?
+  end
+  
+  def valid_piece?(pos, color)
+    !self[pos].nil? && self[pos].color == color &&
+      self[pos].jump_allowed + self[pos].slide_allowed != []
+  end
+  
+  def in_bound?(pos)
+    (0..7).cover?(pos[0]) && (0..7).cover?(pos[1])
+  end
+  
+  def move(pos, seq)
+    self[pos].perform_moves(seq)
   end
   
   def display
@@ -35,12 +48,50 @@ class Board
     puts "\n\n"
   end
   
-  private
-  def start_pieces
+  def dup
+    dup_board = Board.new(false)
     
+    grid.flatten.each do |p|
+      next if p.nil? 
+      dup_board[p.pos]= Piece.new(p.color, p.pos, dup_board, p.is_king) 
+    end
+    
+    dup_board
+  end
+  
+  def win?(color)
+    enemy_color = (color == :white ? :black : :white)
+    #no pieces of enemy color, or enemy pieces cannot make moves
+    return false if team(color).empty?
+    team(enemy_color).empty? || no_moves_left(enemy_color)
+  end
+  
+  private
+  def team(color)
+    grid.flatten.select { |p| p.color == color unless p.nil? }
+  end
+  
+  def no_moves_left(color)
+    team(color).all? { |p| p.jump_allowed + p.slide_allowed == [] }
+  end
+  
+  def start_pieces
+    COLOR.each { |color| place_team(color) }
+  end
+  
+  def place_team(color)
+    rows = (color == :white ? (0..2) : (5..7))
+  
+    rows.each do |row|
+      8.times do |col|
+        next if (row + col).odd?
+        self[[row, col]] = Piece.new(color, [row, col], self)
+      end
+    end
+
   end
   
   def background(row, col, str)
-    (row + col).odd? ? str.on_light_black : str.on_light   
+    (row + col).odd? ? str.on_light_black : str.on_light_yellow
   end
 end
