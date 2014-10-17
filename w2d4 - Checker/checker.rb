@@ -3,8 +3,11 @@ require_relative 'board'
 require_relative 'piece'
 require 'colorize'
 require 'byebug'
+
 class InputError < StandardError ;end
+
 class Checker
+  
   def initialize
     @board = Board.new
     @current_color = :white
@@ -37,6 +40,17 @@ class Checker
     [start_pos, move_seq]
   end
   
+  def take_turn
+      start_pos, move_seq = get_move
+      @board.move(start_pos, move_seq)
+    rescue InvalidMoveError => move_err
+      puts move_err
+      retry
+    rescue InputError => input_err
+      puts input_err
+      retry
+  end
+  
   def validate_move_seq(seq)
     seq.all? { |pos| validate_format(pos) }
   end
@@ -48,17 +62,6 @@ class Checker
   
   def validate_format(pos)
     raise InputError.new("Invalid Format") unless pos.count == 2 || @board.in_bound?(pos)
-  end
-  
-  def take_turn
-      start_pos, move_seq = get_move
-      @board.move(start_pos, move_seq)
-    rescue InvalidMoveError => move_err
-      puts move_err
-      retry
-    rescue InputError => input_err
-      puts input_err
-      retry
   end
   
 end
