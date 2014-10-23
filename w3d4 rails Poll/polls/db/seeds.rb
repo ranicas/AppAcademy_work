@@ -23,5 +23,5 @@ end
 end
 
 20.times do
-  Response.create!(user_id: rand(10) + 1, question_id: rand(10) + 1, answer_choice_id: rand(10) + 1)
+  Response.create!(user_id: rand(10) + 1, answer_choice_id: rand(10) + 1)
 end
