@@ -1,0 +1,2 @@
+module ContactsharesHelper
+end
