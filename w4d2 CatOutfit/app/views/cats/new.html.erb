@@ -1,0 +1,50 @@
+<h2>New Feline Client!</h2>
+<form action="/cats" method="post">
+  <table>
+      <tr>
+          <td><label for="cat_name">Name</label></td>
+          <td><input name="cat[name]" id="cat_name" type="text" value="<%= @cat.name %>"></td>
+      </tr> 
+       
+      <tr>
+          <td><label for="cat_birth_date">Birthdate</label></td>
+          <td><input name="cat[birth_date]" id="cat_birth_date" type="date"
+             value="<%= @cat.birth_date %>"></td> 
+      </tr>
+      
+      <tr>
+          <td><label>Sex</label></td>
+          <td><div>
+            <input name="cat[sex]" id="cat_sex_m" type="radio" value="M">
+            <label for="cat_sex_m">Male</label>
+            <input name="cat[sex]" id="cat_sex_f" type="radio" value="F">
+            <label for="cat_sex_f">Female</label>
+          </div></td>
+      </tr>
+      
+      <tr>
+          <td> <label for="cat_color">Color</label></td>
+          <td><select name="cat[color]" value="<%= @cat.color %>">
+            <option value="calico">Calico</option>
+            <option value="black">Black</option>
+            <option value="white">White</option>
+            <option value="tuxedo">Tuxedo</option>
+            <option value="leopard">Leopard</option>
+            <option value="tabby">Tabby</option>
+          </select></td>
+      </tr>
+      
+      <tr>
+        <td><label for="cat_description">Description</label></td>
+        <td> <textarea name="cat[description]"
+           id="cat_description" value="<%= @cat.description %>">
+             </textarea></td>
+      </tr>
+  
+      <tr>
+        <td></td>
+        <td> <input type="submit" value="Build my client!"></td>
+      </tr>
+  </table>
+  
+</form>
