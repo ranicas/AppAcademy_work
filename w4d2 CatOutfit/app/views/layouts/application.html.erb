@@ -8,10 +8,10 @@
 </head>
 <body>
 <% if current_user.nil? || current_user.id.nil? %>
-  <%= link_to "Please log in", new_session_url %>
+  <%= link_to "Log In!", new_session_url %>
+  <%= link_to "Sign Up!", new_user_url %>
 <% else %>
-  <%= "Hello,  #{current_user.user_name}!"%> 
- <%= button_to "Log out?", session_url, method: :delete %>
+    <%= "Hello,  #{current_user.user_name}!"%> <%= button_to "Log out?", session_url, method: :delete %>
 <% end %>
 <%= yield %>
 

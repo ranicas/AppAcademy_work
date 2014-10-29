@@ -1,4 +1,5 @@
 class SessionsController < ApplicationController
+  before_action :redirect_to_cats_if_signed_in
   
   def new
     @user = User.new
@@ -16,8 +17,7 @@ class SessionsController < ApplicationController
       flash.now[:errors] = ["Incorrect username or password"]
       render :new
     else
-      session[:session_token] = @user.reset_session_token!
-      redirect_to cats_url
+      login_user!
     end
   end
   
