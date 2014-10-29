@@ -6,21 +6,31 @@ class CatsController < ApplicationController
   
   def show
     @cat = Cat.find(params[:id])
+    @requests = @cat.cat_rental_requests.sort_by &:start_date
     render :show
   end
   
   def create
-    p "THESE ARE THE PARAMS"
-    p params
-    p "THESE ARE THE CAT PARAMS"
-    p params[:cat]
     
     @cat = Cat.new(cat_params)
     
     if @cat.save
       redirect_to cat_url(@cat)
     else
+      flash.now[:errors] = @cat.errors.full_messages
       render :new
+    end
+  end
+  
+  def update
+    
+    @cat = Cat.find(params[:id])
+    
+    if @cat.update(cat_params)
+      redirect_to cat_url(@cat)
+    else
+      flash.now[:errors] = @cat.errors.full_messages
+      render :edit
     end
   end
 
@@ -31,6 +41,11 @@ class CatsController < ApplicationController
   def new
     @cat = Cat.new
     render :new
+  end
+  
+  def edit
+    @cat = Cat.find(params[:id])
+    render :edit
   end
   
   private

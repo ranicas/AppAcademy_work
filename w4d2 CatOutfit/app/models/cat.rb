@@ -5,6 +5,8 @@ class Cat < ActiveRecord::Base
   validate :color_valid
   validate :gender
   
+  has_many :cat_rental_requests, dependent: :destroy#, order: 'start_date'
+  
 
   def age
     Date.today.year - self.birth_date.year
@@ -12,7 +14,11 @@ class Cat < ActiveRecord::Base
   
   
   def timeliness
-    self.birth_date < Date.today
+    if !self.birth_date.nil? && self.birth_date < Date.today
+      true
+    else
+      errors[:birth_date] << "can't be in the future"
+    end
   end
   
   def color_valid
