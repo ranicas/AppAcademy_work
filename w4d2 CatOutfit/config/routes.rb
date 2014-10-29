@@ -6,5 +6,7 @@ Rails.application.routes.draw do
     post 'approve', :on => :member
     post 'deny', :on => :member
   end
-  resources :user
+  resources :users, only: [:create, :new, :show]
+  
+  resource :session, only: [:create, :destroy, :new]
 end

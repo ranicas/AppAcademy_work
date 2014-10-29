@@ -1,3 +1,10 @@
+<ul>
+<% if flash[:errors] %>
+  <% flash[:errors].each do |error| %>
+    <li> <%= error %></li>  
+  <% end %>
+<% end %>
+</ul>
 <form action="<%= @cat.persisted? ? cat_url(@cat) : cats_url %>" method="post">
   <input type="hidden" name="_method" value="<%= @cat.persisted? ? "PATCH" : "POST" %>">
   <table>
