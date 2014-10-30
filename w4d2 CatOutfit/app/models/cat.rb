@@ -1,11 +1,12 @@
 class Cat < ActiveRecord::Base
   COLORS = ["calico", "black", "white", "tuxedo", "leopard", "tabby"]
-  validates :birth_date, :color, :name, :sex, presence: true
+  validates :birth_date, :color, :name, :sex, :user_id, presence: true
   validate :timeliness
   validate :color_valid
   validate :gender
   
-  has_many :cat_rental_requests, dependent: :destroy#, order: 'start_date'
+  belongs_to :user 
+  has_many :cat_rental_requests, dependent: :destroy
   
 
   def age

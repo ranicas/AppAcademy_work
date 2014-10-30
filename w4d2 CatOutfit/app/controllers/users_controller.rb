@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
-  before_action :redirect_to_cats_if_signed_in
-  
+  before_action :redirect_to_cats_if_signed_in, only: [:new, :create]
   def new
     @user = User.new
     render :new

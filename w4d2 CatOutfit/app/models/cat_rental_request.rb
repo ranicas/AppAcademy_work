@@ -1,5 +1,5 @@
 class CatRentalRequest < ActiveRecord::Base
-  validates :cat, :start_date, :end_date, :status, presence: true
+  validates :cat, :start_date, :end_date, :status, :user_id, presence: true
   validates :status, inclusion: { in: %w(APPROVED DENIED PENDING),
     message: "%{value} is not a valid status" }
   validate :no_overlapping_approved_requests
@@ -7,6 +7,7 @@ class CatRentalRequest < ActiveRecord::Base
   
   
   belongs_to :cat
+  belongs_to :user
   
   def approve!
     if self.status == "PENDING" && self.overlapping_approved_requests.empty?

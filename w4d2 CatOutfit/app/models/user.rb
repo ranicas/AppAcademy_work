@@ -7,7 +7,8 @@ class User < ActiveRecord::Base
   after_initialize :set_session_token
   before_save :make_username_upcase
   
- 
+  has_many :cats
+  has_many :cat_rental_requests
   
   def self.find_by_credentials(user_name, password)
     user = User.find_by(user_name: user_name.upcase)

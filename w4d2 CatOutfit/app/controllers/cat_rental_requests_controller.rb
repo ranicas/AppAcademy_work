@@ -1,7 +1,9 @@
 class CatRentalRequestsController < ApplicationController
+  before_action :verify_user_owns_cat, only: [:approve, :deny]
   
   def create
-    @request = CatRentalRequest.new(rental_params)
+    user_id = current_user.id
+    @request = CatRentalRequest.new(rental_params.merge({ user_id: user_id }))
    
     if @request.save
       redirect_to cat_url(@request.cat)
@@ -39,5 +41,11 @@ class CatRentalRequestsController < ApplicationController
   def rental_params
     rental_attrs = [:cat_id, :start_date, :end_date, :status]
     params.require(:cat_rental_request).permit(*rental_attrs)
+  end
+  
+  def verify_user_owns_cat
+    unless CatRentalRequest.find(params[:id]).cat.user_id == current_user.id
+      redirect_to cats_url 
+    end
   end
 end

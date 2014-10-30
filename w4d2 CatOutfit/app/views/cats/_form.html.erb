@@ -7,6 +7,12 @@
 </ul>
 <form action="<%= @cat.persisted? ? cat_url(@cat) : cats_url %>" method="post">
   <input type="hidden" name="_method" value="<%= @cat.persisted? ? "PATCH" : "POST" %>">
+  
+  <input
+    type="hidden"
+    name="authenticity_token"
+    value="<%= form_authenticity_token %>">
+    
   <table>
       <tr>
           <td><label for="cat_name">Name</label></td>

@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   end
   
   def redirect_to_cats_if_signed_in
-    unless session[:session_token].nil?
+    unless current_user.nil?
       redirect_to cats_url
     end
   end
