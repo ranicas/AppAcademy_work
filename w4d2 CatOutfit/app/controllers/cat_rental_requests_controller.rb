@@ -1,5 +1,6 @@
 class CatRentalRequestsController < ApplicationController
   before_action :verify_user_owns_cat, only: [:approve, :deny]
+  before_action :logged_in
   
   def create
     user_id = current_user.id

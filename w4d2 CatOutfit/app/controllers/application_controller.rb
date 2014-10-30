@@ -19,4 +19,10 @@ class ApplicationController < ActionController::Base
       redirect_to cats_url
     end
   end
+  
+  def logged_in
+    unless User.find_by(session_token: session[:session_token])
+      redirect_to new_session_url
+    end
+  end
 end

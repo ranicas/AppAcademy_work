@@ -1,6 +1,6 @@
 class SessionsController < ApplicationController
   before_action :redirect_to_cats_if_signed_in, only: [:new, :create]
-  
+  before_action :logged_in, only: [:destroy]
   def new
     @user = User.new
     render :new
